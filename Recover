@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     }
 
     // open memory card file
-    FILE *inptr = fopen(agrv[1], "r");
+    FILE *inptr = fopen(argv[1], "r");
     
     //check valid file
     if (inptr == NULL)
