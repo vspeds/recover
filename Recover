@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     FILE *outptr = NULL;
 
     //begin to read until end of memory card (loop)
-    while (fread(buffer, 512, 1, inptr) == 1)
+    while (fread(buffer, 512, 1, inptr) != 0)
     {
     //if beginning of JPEG
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
