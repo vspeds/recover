@@ -1,13 +1,12 @@
 #include <cs50.h>
 #include <stdio.h>
-#include <string.h>
 
 int main(int argc, char* argv[])
 {
     // Check for invalid usage
     if (argc != 2)
     {
-        printf("Usage: ./recover [file name]\n");
+        printf("Usage: ./recover [filename]\n");
         return 1;
     }
 
@@ -36,48 +35,33 @@ int main(int argc, char* argv[])
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
             //if first JPEG
-            if (JPGcount == 0);
-                {
-                    //open a new file
-                    sprintf(filename, "%03i.jpg", JPGcount);
-                    //open file with new name create by printf - close if not found
-                    outptr = fopen(filename, "w");
-                        if (NULL == outptr)
-                        {
-                            printf("Could not open %s\n", JPGcount);
-                            return 3;
-                        }
-                    //write to output file from buffer
-                    fwrite(buffer, sizeof(buffer), 1, outptr);
-                    //incremember jpeg counter
-                    JPGcount++;
-                }
-            else if (JPGcount > 0);
-                {
-                    //close file
+            if (JPGcount > 0)
+                {   //close file
                     fclose(outptr);
-
-                    //open new file and write into it, increment counter
-                    sprintf(filename, "%03i.jpg", JPGcount);
-                    outptr = fopen(filename, "w");
-                    if (NULL == outptr)
-                        {
-                            printf("Could not open %s\n", JPGcount);
-                            return 4;
-                        }
-                    fwrite(buffer, sizeof(buffer), 1, outptr);
-                    JPGcount++;
                 }
+            //open a new file
+            sprintf(filename, "%03i.jpg", JPGcount);
+            //open file with new name create by printf - close if not found
+            outptr = fopen(filename, "w");
+            if (NULL == outptr)
+                {
+                    printf("Could not open %i\n", JPGcount);
+                    return 3;
+                }
+            //write to output file from buffer
+            fwrite(buffer, sizeof(buffer), 1, outptr);
+            //incremember jpeg counter
+            JPGcount++;
         }
 //else continue writing to old file if not start of new Jpeg
-    else if (JPGcount > 0)
-        {
-            fwrite(buffer, sizeof(buffer), 1, outptr);
-        }
+        else if (JPGcount > 0)
+            {
+                fwrite(buffer, 512, 1, outptr);
+            }
     }
+    
     //at end close all remaining files
     fclose(outptr);
-    fclose(inputr);
+    fclose(inptr);
     
     return 0;
-}
